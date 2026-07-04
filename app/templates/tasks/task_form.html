@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - Kanban Board{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card p-4">
+            <div class="card-body">
+                <!-- Dynamic Page Title (New Task or Edit Task) -->
+                <h3 class="mb-4">
+                    {% if title == 'New Task' %}
+                        <i class="bi bi-plus-circle"></i>
+                    {% else %}
+                        <i class="bi bi-pencil-square"></i>
+                    {% endif %}
+                    {{ title }}
+                </h3>
+
+                <!-- Task Form -->
+                <form method="POST" novalidate>
+                    {{ form.hidden_tag() }}
+
+                    <!-- Title -->
+                    <div class="mb-3">
+                        {{ form.title.label(class="form-label fw-semibold") }}
+                        {{ form.title(class="form-control" + (" is-invalid" if form.title.errors else ""), 
+                                      placeholder="What needs to be done?") }}
+                        {% for error in form.title.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mb-3">
+                        {{ form.description.label(class="form-label fw-semibold") }}
+                        {{ form.description(class="form-control" + (" is-invalid" if form.description.errors else ""), 
+                                           rows="4", 
+                                           placeholder="Add notes or details about this task...") }}
+                        {% for error in form.description.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Status and Priority (side by side) -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            {{ form.status.label(class="form-label fw-semibold") }}
+                            {{ form.status(class="form-select" + (" is-invalid" if form.status.errors else "")) }}
+                            {% for error in form.status.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form.priority.label(class="form-label fw-semibold") }}
+                            {{ form.priority(class="form-select" + (" is-invalid" if form.priority.errors else "")) }}
+                            {% for error in form.priority.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Due Date -->
+                    <div class="mb-3">
+                        {{ form.due_date.label(class="form-label fw-semibold") }}
+                        {{ form.due_date(class="form-control" + (" is-invalid" if form.due_date.errors else ""), 
+                                        type="date") }}
+                        {% for error in form.due_date.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Tags -->
+                    <div class="mb-4">
+                        {{ form.tags.label(class="form-label fw-semibold") }}
+                        {{ form.tags(class="form-control" + (" is-invalid" if form.tags.errors else ""), 
+                                    placeholder="work, personal, urgent") }}
+                        <div class="form-text">Separate tags with commas</div>
+                        {% for error in form.tags.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="d-flex gap-2">
+                        {{ form.submit(class="btn btn-primary") }}
+                        <a href="{{ url_for('tasks.board') }}" class="btn btn-outline-secondary">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

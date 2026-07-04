@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Register - Kanban Board{% endblock %}
+
+{% block content %}
+<div class="auth-card">
+    <div class="card p-4">
+        <div class="card-body">
+            <!-- Page Title -->
+            <h2 class="text-center mb-1">Create Account ✨</h2>
+            <p class="text-center text-muted mb-4">Start organizing your tasks today</p>
+
+            <!-- Registration Form -->
+            <form method="POST" action="{{ url_for('auth.register') }}" novalidate>
+                {{ form.hidden_tag() }}
+
+                <!-- Username Field -->
+                <div class="mb-3">
+                    {{ form.username.label(class="form-label") }}
+                    {{ form.username(class="form-control" + (" is-invalid" if form.username.errors else ""), 
+                                     placeholder="Choose a username") }}
+                    {% for error in form.username.errors %}
+                        <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <!-- Email Field -->
+                <div class="mb-3">
+                    {{ form.email.label(class="form-label") }}
+                    {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else ""), 
+                                  placeholder="you@example.com") }}
+                    {% for error in form.email.errors %}
+                        <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <!-- Password Field -->
+                <div class="mb-3">
+                    {{ form.password.label(class="form-label") }}
+                    {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else ""), 
+                                     placeholder="At least 6 characters") }}
+                    {% for error in form.password.errors %}
+                        <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <!-- Confirm Password Field -->
+                <div class="mb-3">
+                    {{ form.confirm_password.label(class="form-label") }}
+                    {{ form.confirm_password(class="form-control" + (" is-invalid" if form.confirm_password.errors else ""), 
+                                             placeholder="Type your password again") }}
+                    {% for error in form.confirm_password.errors %}
+                        <div class="invalid-feedback">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-grid">
+                    {{ form.submit(class="btn btn-primary btn-lg") }}
+                </div>
+            </form>
+
+            <!-- Link to Login -->
+            <p class="text-center mt-4 mb-0">
+                Already have an account? 
+                <a href="{{ url_for('auth.login') }}" class="text-decoration-none">Log in here</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}My Tasks - Kanban Board{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="mb-0">
+        <i class="bi bi-kanban"></i> My Tasks
+    </h3>
+    <a href="{{ url_for('tasks.create_task') }}" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> New Task
+    </a>
+</div>
+
+<!-- Kanban Board - Three Columns -->
+<div class="row g-3">
+
+    <!-- ─── TO DO Column ────────────────────────────────────────────────── -->
+    <div class="col-md-4">
+        <div class="column-header-todo p-3 bg-white rounded-top">
+            <h5 class="mb-0 d-flex align-items-center">
+                📋 To Do
+                <span id="todo-count" class="badge bg-primary ms-2">{{ todo_tasks|length }}</span>
+            </h5>
+        </div>
+        <div class="task-column" id="todo-column" data-status="todo">
+            {% if todo_tasks %}
+                {% for task in todo_tasks %}
+                    {% include "tasks/_task_card.html" %}
+                {% endfor %}
+            {% else %}
+                <div class="empty-state" id="todo-empty">
+                    <i class="bi bi-inbox"></i>
+                    <p>No tasks here yet.<br>Create a new task or drag one here!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- ─── IN PROGRESS Column ──────────────────────────────────────────── -->
+    <div class="col-md-4">
+        <div class="column-header-in-progress p-3 bg-white rounded-top">
+            <h5 class="mb-0 d-flex align-items-center">
+                🔄 In Progress
+                <span id="in_progress-count" class="badge bg-warning text-dark ms-2">{{ in_progress_tasks|length }}</span>
+            </h5>
+        </div>
+        <div class="task-column" id="in-progress-column" data-status="in_progress">
+            {% if in_progress_tasks %}
+                {% for task in in_progress_tasks %}
+                    {% include "tasks/_task_card.html" %}
+                {% endfor %}
+            {% else %}
+                <div class="empty-state" id="in_progress-empty">
+                    <i class="bi bi-hourglass-split"></i>
+                    <p>Nothing in progress.<br>Drag a task here when you start working on it!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- ─── DONE Column ─────────────────────────────────────────────────── -->
+    <div class="col-md-4">
+        <div class="column-header-done p-3 bg-white rounded-top">
+            <h5 class="mb-0 d-flex align-items-center">
+                ✅ Done
+                <span id="done-count" class="badge bg-success ms-2">{{ done_tasks|length }}</span>
+            </h5>
+        </div>
+        <div class="task-column" id="done-column" data-status="done">
+            {% if done_tasks %}
+                {% for task in done_tasks %}
+                    {% include "tasks/_task_card.html" %}
+                {% endfor %}
+            {% else %}
+                <div class="empty-state" id="done-empty">
+                    <i class="bi bi-check-circle"></i>
+                    <p>No completed tasks yet.<br>Drag tasks here when they're finished!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Load the Kanban board drag-and-drop JavaScript -->
+<script src="{{ url_for('static', filename='js/board.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,73 @@
+{# 
+    Task Card Partial Template
+    
+    This is a reusable card component included in each Kanban column.
+    It displays a single task with its properties.
+    
+    Variables available:
+    - task: The Task model instance
+#}
+<div class="task-card priority-{{ task.priority }}" data-task-id="{{ task.id }}">
+    <!-- Task Title -->
+    <div class="d-flex justify-content-between align-items-start mb-2">
+        <h6 class="mb-0 fw-semibold">{{ task.title }}</h6>
+    </div>
+
+    <!-- Description preview (first 80 chars) -->
+    {% if task.description %}
+        <p class="text-muted small mb-2">
+            {{ task.description[:80] }}{% if task.description|length > 80 %}...{% endif %}
+        </p>
+    {% endif %}
+
+    <!-- Priority Badge -->
+    <div class="mb-2">
+        {% if task.priority == 'high' %}
+            <span class="badge bg-danger">🔴 High</span>
+        {% elif task.priority == 'medium' %}
+            <span class="badge bg-warning text-dark">🟡 Medium</span>
+        {% else %}
+            <span class="badge bg-success">🟢 Low</span>
+        {% endif %}
+    </div>
+
+    <!-- Due Date -->
+    {% if task.due_date %}
+        <div class="small mb-2">
+            <i class="bi bi-calendar-event"></i>
+            {% if task.due_date < today %}
+                <span class="text-danger fw-bold">
+                    {{ task.due_date.strftime('%b %d, %Y') }} (Overdue!)
+                </span>
+            {% else %}
+                <span class="text-muted">
+                    {{ task.due_date.strftime('%b %d, %Y') }}
+                </span>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    <!-- Tags -->
+    {% if task.tags_list %}
+        <div class="mb-2">
+            {% for tag in task.tags_list %}
+                <span class="badge bg-light text-dark border me-1">{{ tag }}</span>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Action Buttons -->
+    <div class="d-flex gap-1 mt-2">
+        <a href="{{ url_for('tasks.edit_task', task_id=task.id) }}" 
+           class="btn btn-outline-secondary btn-sm" title="Edit task">
+            <i class="bi bi-pencil"></i>
+        </a>
+        <form method="POST" action="{{ url_for('tasks.delete_task', task_id=task.id) }}" 
+              class="d-inline" onsubmit="return confirm('Delete this task?');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-outline-danger btn-sm" title="Delete task">
+                <i class="bi bi-trash"></i>
+            </button>
+        </form>
+    </div>
+</div>
